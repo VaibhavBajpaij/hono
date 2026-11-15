@@ -114,6 +114,16 @@ describe('Parse cookie', () => {
     expect(cookie['best_cookie\\']).toBeUndefined()
   })
 
+  it('Should reject standalone double quote as invalid cookie value', () => {
+    const cookieString = 'single_quote="; empty_quoted=""; valid_quoted="bar"; unclosed="foo; trailing=foo"'
+    const cookie: Cookie = parse(cookieString)
+    expect(cookie['single_quote']).toBeUndefined()
+    expect(cookie['empty_quoted']).toBe('')
+    expect(cookie['valid_quoted']).toBe('bar')
+    expect(cookie['unclosed']).toBeUndefined()
+    expect(cookie['trailing']).toBeUndefined()
+  })
+
   it('Should ignore NBSP-prefixed cookie names when parsing one cookie by name', () => {
     const cookieString = '\u00a0dummy-cookie=evil; dummy-cookie=victim'
     const cookie: Cookie = parse(cookieString, 'dummy-cookie')
