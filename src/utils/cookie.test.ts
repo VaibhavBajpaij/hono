@@ -60,6 +60,14 @@ describe('Parse cookie', () => {
     expect(cookie['last_cookie']).toBe('')
   })
 
+  it('Should reject standalone quote as an invalid cookie value', () => {
+    const cookieString = 'foo="; bar=val"; baz="val'
+    const cookie: Cookie = parse(cookieString)
+    expect(cookie['foo']).toBeUndefined()
+    expect(cookie['bar']).toBeUndefined()
+    expect(cookie['baz']).toBeUndefined()
+  })
+
   it('Should parse cookies but not process signed cookies', () => {
     // also contains another cookie with a '.' in its value to test it is not misinterpreted as signed cookie
     const cookieString =
